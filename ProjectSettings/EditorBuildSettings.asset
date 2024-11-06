@@ -4,5 +4,13 @@
 EditorBuildSettings:
   m_ObjectHideFlags: 0
   serializedVersion: 2
-  m_Scenes: []
-  m_configObjects: {}
+  m_Scenes:
+  - enabled: 1
+    path: Assets/Scenes/Menu.unity
+    guid: 816d71174526af548a9db3b811998956
+  - enabled: 1
+    path: Assets/Scenes/FreeDrawCanvas.unity
+    guid: 9b29d27f9bbd24544816438da9aa934c
+  m_configObjects:
+    Unity.XR.Oculus.Settings: {fileID: 11400000, guid: 3c3f96900bb7954418626e25c65be308, type: 2}
+    com.unity.xr.management.loader_settings: {fileID: 11400000, guid: 0d1bdcb052c661c44a6db0eb384f3474, type: 2}
