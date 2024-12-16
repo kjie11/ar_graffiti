@@ -3,6 +3,7 @@ using System.Collections;
 using System.Collections.Generic;
 using System.IO;
 using Meta.XR.MRUtilityKit;
+using TMPro;
 using UnityEngine;
 
 public class DrawPath : MonoBehaviour
@@ -17,240 +18,151 @@ public class DrawPath : MonoBehaviour
      public GameObject NewPrefab;
      public float maxSpawnDistance=1.0f;
      private bool hasSpawned=false;
-     private bool successed=false;
-     private Renderer ren;
-     [SerializeField] private Material customMaterial; 
+    //  private bool successed=false;
+    //  private Renderer ren;
+    //  [SerializeField] private Material customMaterial; 
      private Vector3 finalPosition;
      private Quaternion finalRotation;
 
-      private LineRenderer lineRenderer;
+    //   private LineRenderer lineRenderer;
     private List<Vector3> linePoints = new List<Vector3>();
-public Color lineColor = Color.blue;
+    private Texture2D whiteBoardTexture;
+// public Color lineColor = Color.blue;
 
 public GameObject previewPrefab; // 用于预览的半透明对象
 private GameObject currentPreview; // 当前的预览实例
 
+private Vector2 lastTouchPos;
+    public int penSize = 80; // Pen size for drawing
+    public Color penColor = Color.blue; // Pen color
+    private Vector2 textureSize;
+     private Color[] originalPixels;
+      private Color[] penColorArray;
+    public TextMeshProUGUI checkText;
     
     // Start is called before the first frame update
     void Start()
     {
-        // prefab.SetActive(false);
+        
          WhiteBoardRenderer = whiteBoard.GetComponent<Renderer>();
+        whiteBoardTexture = (Texture2D)WhiteBoardRenderer.material.mainTexture;
+        textureSize = new Vector2(whiteBoardTexture.width, whiteBoardTexture.height);
+        originalPixels = whiteBoardTexture.GetPixels();
+        
+         penColorArray = new Color[penSize * penSize];
+        for (int i = 0; i < penColorArray.Length; i++)
+        {
+            penColorArray[i] = penColor;
+        }
 
-         lineRenderer = gameObject.GetComponent<LineRenderer>();
-         prefab.SetActive(false);
-
-         if (previewPrefab != null)
+        // Initialize the preview object
+        if (previewPrefab != null)
     {
         currentPreview = Instantiate(previewPrefab);
         currentPreview.SetActive(false);
     }
-        
-        
+    else
+    {
+        Debug.LogError("previewPrefab is not assigned in the inspector.");
     }
 
-    // Update is called once per frame
+   
+    }
+
+    
     void Update()
     {
         
         CheckPathWithRaycast();
-        // if(hasSpawned==false){
-
-        // }
+       
         SpawnArea();
-        // if(successed==true){
-        //     if(ren){
-              
-        //         {
-        //             ren.material= customMaterial;
-        //         }
-        //     }
-        //     else{
-
-        //         ren.material.color = Color.blue;
-        //     }
-        // }
-        // Instantiate(NewPrefab, finalPosition, finalRotation);
+        
         
 
     }
 
-    // private void OnTriggerEnter(Collider other)
-    // {
-    //     Debug.Log("in the collider");
-    //     // if (other.gameObject.name == "whiteBoard" )
-    //     if (other.gameObject.tag.CompareTo("path")==0)
-    //     {
-            
-    //         WhiteBoardRenderer.material.color = Color.green;
-    //     }
-    //     if (paths.Contains(other.gameObject))
-    // {
-    //     WhiteBoardRenderer.material.color = Color.blue;
-    // }
-    // }
+    
 
-    //  private void OnTriggerEnter(Collider other)
-    // {
-    //     if (currentPathIndex < 11 && other.gameObject == paths[currentPathIndex])
-    //     {
-            
-    //         other.gameObject.GetComponent<Renderer>().material.color = Color.blue;
-    //         Debug.Log(currentPathIndex);
-    //         Debug.Log(paths[currentPathIndex]);
-            
-            
-    //         currentPathIndex++;
-
-            
-    //         if (currentPathIndex >= paths.Count)
-    //         {
-                
-    //             WhiteBoardRenderer.material.color = Color.green;
-    //             Debug.Log("Successfully followed all paths!");
-    //             successed=true;
-    //             // ChangeMat();
-    //         }
-    //     }
-    // }
-    
-    // private void ChangeMat(){
-    //     GameObject instantiatedPrefab = Instantiate(prefab, prefab.transform.position, prefab.transform.rotation);
-    //     Renderer r = instantiatedPrefab.GetComponent<Renderer>();
-    // if (r != null)
-    // {
-    //     r.material.color = Color.red; // Change to the desired color
-    // }
-    
-   
-    
-    // }
      private void CheckPathWithRaycast()
     {
-        if(OVRInput.Get(OVRInput.RawButton.RIndexTrigger)){
-        Ray ray = new Ray(RayStartPoint.position, RayStartPoint.forward);
-        if (Physics.Raycast(ray, out RaycastHit hit))
+        if (OVRInput.Get(OVRInput.RawButton.RIndexTrigger))
         {
-            drawWithLine(ray, hit);
-            if (currentPathIndex < paths.Count && hit.collider.gameObject == paths[currentPathIndex])
+            Ray ray = new Ray(RayStartPoint.position, RayStartPoint.forward);
+            if (Physics.Raycast(ray, out RaycastHit hit))
             {
-                // 将路径点颜色变蓝
                 
-                // hit.collider.gameObject.GetComponent<Renderer>().material.color = Color.blue;
-                currentPathIndex++;
-
-                // 如果按顺序射线触碰所有路径点，触发条件
-                if (currentPathIndex >= paths.Count)
-                {
-                    // WhiteBoardRenderer.material.color = Color.yellow;
-                   
-                    Debug.Log("Successfully followed all paths with raycast!");
-                    successed=true;
-                    Instantiate(NewPrefab, finalPosition, finalRotation);
-
+                DrawOnTexture(ray, hit);
+                if (currentPathIndex < paths.Count && hit.collider.gameObject == paths[currentPathIndex])
+                {   
+                    checkText.text =hit.collider.gameObject+":"+paths[currentPathIndex];
+                    currentPathIndex++;
+                    
+                    if (currentPathIndex >= paths.Count)
+                    {
+                       
+                        Instantiate(NewPrefab, finalPosition, finalRotation);
+                        currentPreview.SetActive(false);
+                    }
                 }
             }
         }
-        }
-
-         else if (OVRInput.GetUp(OVRInput.RawButton.RIndexTrigger))
+        else if (OVRInput.GetUp(OVRInput.RawButton.RIndexTrigger))
         {
-            // 松开按钮后，可以清空当前绘制的线条（可选）
-            linePoints.Clear();
-            lineRenderer.positionCount = 0;
-        }
-    }
-
-    private void drawWithLine(Ray ray,RaycastHit hit){
-
-        // if(OVRInput.Get(OVRInput.RawButton.RIndexTrigger)){
-                Vector3 hitPoint = hit.point;
-                
-                    // 将碰撞点添加到 linePoints 列表中
-                    linePoints.Add(hitPoint);
-
-                    if(linePoints.Count>=4){
-                        DrawBezierCurve();
-                    }
-                    // lineRenderer.positionCount = linePoints.Count;
-                    // lineRenderer.SetPositions(linePoints.ToArray());
-        // }
-        //  else if (OVRInput.GetUp(OVRInput.RawButton.RIndexTrigger))
-        // {
-        //     // 松开按钮后，可以清空当前绘制的线条（可选）
-        //     linePoints.Clear();
-        //     // lineRenderer.positionCount = 0;
-        // }
-    }
-
-    private void DrawBezierCurve()
-    {
-        int segmentCount = 20; 
-        List<Vector3> bezierPoints = new List<Vector3>();
-
-        // 每四个点生成一个贝塞尔曲线片段
-        for (int i = 0; i <= linePoints.Count - 4; i += 3)
+            // linePoints.Clear();
+            if (whiteBoardTexture != null && originalPixels != null)
         {
-            Vector3 p0 = linePoints[i];
-            Vector3 p1 = linePoints[i + 1];
-            Vector3 p2 = linePoints[i + 2];
-            Vector3 p3 = linePoints[i + 3];
-
-            // 在每两个控制点之间生成分段
-            for (int j = 0; j <= segmentCount; j++)
-            {
-                float t = j / (float)segmentCount;
-                Vector3 bezierPoint = CalculateCubicBezierPoint(t, p0, p1, p2, p3);
-                bezierPoints.Add(bezierPoint);
-            }
+            whiteBoardTexture.SetPixels(originalPixels);
+            whiteBoardTexture.Apply();
         }
-
-        lineRenderer.positionCount = bezierPoints.Count;
-        lineRenderer.SetPositions(bezierPoints.ToArray());
+        }
     }
 
+    private void DrawOnTexture(Ray ray, RaycastHit hit)
+{
+    
+    
 
-     private Vector3 CalculateCubicBezierPoint(float t, Vector3 p0, Vector3 p1, Vector3 p2, Vector3 p3)
+    Vector2 touchPos = new Vector2(hit.textureCoord.x, hit.textureCoord.y);
+
+   
+    int x = (int)(touchPos.x * whiteBoardTexture.width - (penSize / 2));
+    int y = (int)(touchPos.y * whiteBoardTexture.height - (penSize / 2));
+
+    
+    x = Mathf.Clamp(x, 0, whiteBoardTexture.width - penSize);
+    y = Mathf.Clamp(y, 0, whiteBoardTexture.height - penSize);
+
+    // Only draw if the touch position is different from the last one
+    if (lastTouchPos != touchPos)
     {
-        float u = 1 - t;
-        float tt = t * t;
-        float uu = u * u;
-        float uuu = uu * u;
-        float ttt = tt * t;
-
-        Vector3 point = uuu * p0;        // (1 - t)^3 * P0
-        point += 3 * uu * t * p1;        // 3 * (1 - t)^2 * t * P1
-        point += 3 * u * tt * p2;        // 3 * (1 - t) * t^2 * P2
-        point += ttt * p3;               // t^3 * P3
-
-        return point;
+        whiteBoardTexture.SetPixels(x, y, penSize, penSize, penColorArray);
+        whiteBoardTexture.Apply();  // Apply the changes
     }
+
+    // Update the last touch position
+    lastTouchPos = touchPos;
+}
+
+    
+
     private void SpawnArea(){
-        // if(hasSpawned==true){
-        //     return;
-        // }
-        
+   
         Ray ray = new Ray(
         OVRInput.GetLocalControllerPosition(OVRInput.Controller.RTouch), 
         OVRInput.GetLocalControllerRotation(OVRInput.Controller.RTouch) * Vector3.forward
     );
-
-    
 
     MRUKAnchor sceneAnchor = null;
     var positioningMethod = MRUK.PositioningMethod.DEFAULT;
     LabelFilter labelFilter = new LabelFilter();
 
     var bestPose = MRUK.Instance?.GetCurrentRoom()?.GetBestPoseFromRaycast(ray, Mathf.Infinity, labelFilter, out sceneAnchor, positioningMethod);
-
-    
         
     if (bestPose.HasValue && sceneAnchor != null)
     {
        float distanceToWall = Vector3.Distance(OVRInput.GetLocalControllerPosition(OVRInput.Controller.RTouch), bestPose.Value.position);
 
-        // prefab.transform.position = bestPose.Value.position;
-        //     prefab.transform.rotation = bestPose.Value.rotation;
+        
         if (distanceToWall <= maxSpawnDistance)
         {
            
@@ -265,61 +177,34 @@ private GameObject currentPreview; // 当前的预览实例
 
             if (OVRInput.GetDown(OVRInput.Button.One) && prefab != null)
             {
-                // prefab.SetActive(true);
-                Instantiate(prefab, bestPose.Value.position, bestPose.Value.rotation);
-                ren=prefab.GetComponent<Renderer>();
+                
+                // Instantiate(prefab, bestPose.Value.position, bestPose.Value.rotation);
+                // ren=prefab.GetComponent<Renderer>();
                 prefab.transform.position=bestPose.Value.position;
                 prefab.transform.rotation=bestPose.Value.rotation;
                 finalPosition=bestPose.Value.position;
                 finalRotation=bestPose.Value.rotation;
                 whiteBoard.SetActive(true);
-                // currentPreview.SetActive(false);
+                
                 hasSpawned=true;
             }
         }
     }
-    // else
-    // {
-    //      if (Physics.Raycast(ray, out RaycastHit hit))
-    //     {
-    //         float distanceToHit = Vector3.Distance(OVRInput.GetLocalControllerPosition(OVRInput.Controller.RTouch), hit.point);
-    //         prefab.transform.position = hit.point;
-    //             prefab.transform.rotation = Quaternion.FromToRotation(Vector3.up, hit.normal) * Quaternion.Euler(-90, 0, 0);
-
-    //         if (distanceToHit <= maxSpawnDistance) 
-    //         {
-                
-
-    //             if (OVRInput.GetDown(OVRInput.Button.One) && prefab != null)
-    //             {
-    //                 Instantiate(prefab, hit.point, Quaternion.FromToRotation(Vector3.up, hit.normal) * Quaternion.Euler(-90, 0, 0));
-    //             }
-    //         }
-    //     }
-    
-    // }
     
     
      
     }
     
-    // public void setTransparent(){
-    //     foreach (GameObject obj in paths)
-    //     {
-    //         Renderer r = obj.GetComponent<Renderer>();
-    //         if (r != null)
-    //         {
-    //             Color color = r.material.color;
-    //             color.a = 0.0f; // 设置为半透明
-    //             r.material.color = color;
-    //         }
-    //         else{
-    //                 r.material.color = Color.green;
-                
-    //         }
-    //     }
-    // }
+    
 
+    private void OnApplicationQuit()
+    {
+        if (whiteBoardTexture != null && originalPixels != null)
+        {
+            whiteBoardTexture.SetPixels(originalPixels);
+            whiteBoardTexture.Apply();
+        }
+    }
    
 
     }
