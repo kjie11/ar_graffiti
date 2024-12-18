@@ -1,4 +1,5 @@
 using System.Collections.Generic;
+using Meta.XR.MRUtilityKit;
 using TMPro;
 using UnityEngine;
 
@@ -23,8 +24,34 @@ public class SprayOnWhiteboard : MonoBehaviour
     private  int totalPixels;
     Color[] targetAreaPixels;
 
+
+    //
+    public GameObject prefab; //要生成的图片
+    public float maxSpawnDistance=1.0f;
+    public GameObject previewPrefab; // 用于预览的半透明对象
+private GameObject currentPreview; // 当前的预览实例
+ private Vector3 finalPosition;
+     private Quaternion finalRotation;
+
+
+private bool hasSpawned=false;
+
     private void Start()
     {
+         if (GameManager.Instance.pictureprefab!= null)
+        {
+            prefab = GameManager.Instance.pictureprefab;
+            // checkText.text="recevied";
+        }
+        // else
+        // {
+        //     checkText.text=""+GameManager.Instance.pictureprefab;
+        // }
+
+        
+       currentPreview = Instantiate(previewPrefab);
+        currentPreview.SetActive(false);
+
         // 获取白板的 Renderer 和纹理
         whiteBoardRenderer = whiteBoard.GetComponent<Renderer>();
         whiteBoardTexture = (Texture2D)whiteBoardRenderer.material.mainTexture;
@@ -58,6 +85,7 @@ public class SprayOnWhiteboard : MonoBehaviour
 
     private void Update()
     {
+        Area();
         // 按下 trigger 时开始涂鸦
         if (OVRInput.Get(OVRInput.RawButton.RIndexTrigger))
         {
@@ -89,6 +117,8 @@ public class SprayOnWhiteboard : MonoBehaviour
         
         
     }
+
+
     
 
     private void Draw(RaycastHit hit)
@@ -135,6 +165,8 @@ public class SprayOnWhiteboard : MonoBehaviour
             Vector2 lerpedPos = Vector2.Lerp(start, end, t);
             int lerpedX = (int)(lerpedPos.x * whiteBoardTexture.width);
             int lerpedY = (int)(lerpedPos.y * whiteBoardTexture.height);
+             lerpedX = Mathf.Clamp(lerpedX, 0, whiteBoardTexture.width - penSize);
+        lerpedY = Mathf.Clamp(lerpedY, 0, whiteBoardTexture.height - penSize);
 
             // 绘制线条
             whiteBoardTexture.SetPixels(lerpedX, lerpedY, penSize, penSize, penColorArray);
@@ -188,6 +220,7 @@ public class SprayOnWhiteboard : MonoBehaviour
     if (isCovered)
     {
         r.material.color = Color.blue;  // 如果目标区域已完全被涂鸦覆盖，设置为蓝色
+        Spawn();
     }
     else
     {
@@ -211,5 +244,62 @@ private float ColorDistance(Color a, Color b)
              
             whiteBoardTexture.Apply();
         }
+    }
+
+
+    public void Area(){
+       
+        Ray ray = new Ray(
+        OVRInput.GetLocalControllerPosition(OVRInput.Controller.RTouch), 
+        OVRInput.GetLocalControllerRotation(OVRInput.Controller.RTouch) * Vector3.forward
+    );
+
+    
+
+    MRUKAnchor sceneAnchor = null;
+    var positioningMethod = MRUK.PositioningMethod.DEFAULT;
+    LabelFilter labelFilter = new LabelFilter();
+
+    var bestPose = MRUK.Instance?.GetCurrentRoom()?.GetBestPoseFromRaycast(ray, Mathf.Infinity, labelFilter, out sceneAnchor, positioningMethod);
+
+    
+        
+    if (bestPose.HasValue && sceneAnchor != null)
+    {
+       float distanceToWall = Vector3.Distance(OVRInput.GetLocalControllerPosition(OVRInput.Controller.RTouch), bestPose.Value.position);
+
+      
+        if(hasSpawned){
+            return;
+        }
+        if (distanceToWall <= maxSpawnDistance)
+        {
+           
+
+           
+                 currentPreview.transform.position = bestPose.Value.position;
+            currentPreview.transform.rotation = bestPose.Value.rotation;
+                    currentPreview.SetActive(true);
+            
+            
+            
+
+            if (OVRInput.GetDown(OVRInput.Button.One) && prefab != null)
+            {
+               
+                finalPosition=bestPose.Value.position;
+                finalRotation=bestPose.Value.rotation;
+                
+                hasSpawned=true;
+            }
+        }
+    }
+    }
+    public void Spawn(){
+           
+            Instantiate(prefab, finalPosition,finalRotation);
+            currentPreview.SetActive(false);
+                
+              
     }
 }

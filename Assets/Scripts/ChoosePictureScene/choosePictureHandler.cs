@@ -1,19 +1,53 @@
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using TMPro;
+using UnityEditor;
 using UnityEngine;
+using UnityEngine.SceneManagement;
 using UnityEngine.UI;
+
+// public class GameManager : MonoBehaviour
+// {
+//     public static Material savedMaterial;  // 静态变量保存材质
+//     public  static GameObject Pictureprefab;
+//     // 确保在场景切换时保持数据
+//     private static GameManager instance; 
+
+//     private void Awake()
+//     {
+//         // if (instance == null)
+//         // {
+//         //     instance = this;  // 设置唯一的 GameManager 实例
+//         //     DontDestroyOnLoad(gameObject);  // 保证跨场景保留
+//         // }
+//         // else
+//         // {
+//         //     Destroy(gameObject);  // 如果已有实例，销毁新创建的 GameManager
+//         // }
+
+//         DontDestroyOnLoad(gameObject); 
+//     }
+// }
 
 public class choosePictureHandler : MonoBehaviour
 {
-    public GameObject checkCube;
+    public GameObject choosedPicture;
     Renderer r;
     public TextMeshProUGUI checkText;
+    // public GameObject spawnGameObj;
+    // public GameObject spawnPrefab;
+    // public SceneAsset nextScene;
+    public String sceneName;
     // Start is called before the first frame update
+    void Awake(){
+        DontDestroyOnLoad(choosedPicture); 
+    }
     void Start()
     {
-         r=checkCube.GetComponent<Renderer>();
-
+        
+         r=choosedPicture.GetComponent<Renderer>();
+        // string sceneName = nextScene.name;
     }
 
     // Update is called once per frame
@@ -21,17 +55,7 @@ public class choosePictureHandler : MonoBehaviour
     {
         
     }
-     // 绑定在按钮上的不同方法
-    public void OnCat1_buttonClicked()
-    {
-        r.material.color=Color.red;
-    }
-
-    public void OnButton2Clicked()
-    {
-         r.material.color=Color.green;
-    }
-
+    
 
     public void OnButtonClick()
     {
@@ -52,6 +76,12 @@ public class choosePictureHandler : MonoBehaviour
                     {
                         
                          CreateMaterialFromImage(image);
+                         GameManager.Instance.pictureprefab = choosedPicture;
+                        //  GameManager.Instance.data=1;
+                        //  spawnGameObj.SetActive(true);
+                        //  startSpawn();
+                        checkText.text=""+GameManager.Instance.pictureprefab;
+                         SceneManager.LoadScene(sceneName);
                     }
                     else
                     {
@@ -76,25 +106,25 @@ public class choosePictureHandler : MonoBehaviour
 
    private void CreateMaterialFromImage(Image image)
     {
-        checkText.text="in the material method";
+        // checkText.text="in the material method";
         // Create a new material
         Material newMaterial = new Material(Shader.Find("Standard"));
-        checkText.text="created new mat";
+        // checkText.text="created new mat";
         // Apply the Image's sprite texture to the material
         newMaterial.mainTexture = image.sprite.texture;
+         GameManager.savedMaterial = newMaterial;
 
         // Apply the new material to the checkCube's renderer
-        if (checkCube != null)
+        if (choosedPicture != null)
         {
-            checkCube.GetComponent<Renderer>().material = newMaterial;
+            choosedPicture.GetComponent<Renderer>().material = newMaterial;
         }
         else
         {
             Debug.LogError("checkCube is not assigned.");
         }
 
-        // Optionally update the text to show the name of the image
-        checkText.text = "Image applied: " + image.sprite.name;
+        
     }
 
 

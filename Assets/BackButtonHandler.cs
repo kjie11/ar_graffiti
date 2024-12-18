@@ -1,10 +1,13 @@
+using System;
 using System.Collections;
 using System.Collections.Generic;
+using Oculus.Interaction.Samples;
 using UnityEngine;
 using UnityEngine.SceneManagement;
 
-public class ChangeScene : MonoBehaviour
+public class BackButtonHandler : MonoBehaviour
 {
+    public String BackToScene;
     // Start is called before the first frame update
     void Start()
     {
@@ -17,7 +20,7 @@ public class ChangeScene : MonoBehaviour
         
     }
 
-    public void ChangeScene1(){
-        SceneManager.LoadScene("FreeDrawCanvas");
+    public void backScene(){
+        SceneManager.LoadScene(BackToScene);
     }
 }

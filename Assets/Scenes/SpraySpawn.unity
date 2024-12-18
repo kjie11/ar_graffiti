@@ -788,9 +788,17 @@ PrefabInstance:
       value: 
       objectReference: {fileID: 0}
     - target: {fileID: 6879891396405622336, guid: 30a145a34172302448965f8b643f21f8, type: 3}
+      propertyPath: prefab
+      value: 
+      objectReference: {fileID: 5623230191982645656, guid: 44daf95f9a7db2c48a3b4e438fe3d9f0, type: 3}
+    - target: {fileID: 6879891396405622336, guid: 30a145a34172302448965f8b643f21f8, type: 3}
       propertyPath: checkObj
       value: 
       objectReference: {fileID: 416939976}
+    - target: {fileID: 6879891396405622336, guid: 30a145a34172302448965f8b643f21f8, type: 3}
+      propertyPath: previewPrefab
+      value: 
+      objectReference: {fileID: 5529444634508664450, guid: cc991828498b19b4f93e3245691d6ad4, type: 3}
     - target: {fileID: 6879891396405622336, guid: 30a145a34172302448965f8b643f21f8, type: 3}
       propertyPath: rayStartPoint
       value: 

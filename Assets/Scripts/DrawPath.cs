@@ -5,6 +5,7 @@ using System.IO;
 using Meta.XR.MRUtilityKit;
 using TMPro;
 using UnityEngine;
+using UnityEngine.SceneManagement;
 
 public class DrawPath : MonoBehaviour
 {
@@ -39,10 +40,21 @@ private Vector2 lastTouchPos;
      private Color[] originalPixels;
       private Color[] penColorArray;
     public TextMeshProUGUI checkText;
+    public GameObject targetObject;
     
     // Start is called before the first frame update
     void Start()
     {
+
+        if (GameManager.Instance.pictureprefab!= null)
+        {
+            NewPrefab = GameManager.Instance.pictureprefab;
+            checkText.text="recevied";
+        }
+        else
+        {
+            checkText.text=""+GameManager.Instance.pictureprefab;
+        }
         
          WhiteBoardRenderer = whiteBoard.GetComponent<Renderer>();
         whiteBoardTexture = (Texture2D)WhiteBoardRenderer.material.mainTexture;
@@ -95,6 +107,9 @@ private Vector2 lastTouchPos;
                 if (currentPathIndex < paths.Count && hit.collider.gameObject == paths[currentPathIndex])
                 {   
                     checkText.text =hit.collider.gameObject+":"+paths[currentPathIndex];
+                    Renderer r=paths[currentPathIndex].GetComponent<Renderer>();
+                    r.material.color=Color.blue;
+
                     currentPathIndex++;
                     
                     if (currentPathIndex >= paths.Count)

@@ -1,6 +1,7 @@
 using System.Collections;
 using System.Collections.Generic;
 using Meta.XR.MRUtilityKit;
+using TMPro;
 using UnityEngine;
 
 public class SpawnArea : MonoBehaviour
@@ -17,9 +18,23 @@ private GameObject currentPreview; // 当前的预览实例
    public int currentCount=0;
 
 private bool hasSpawned=false;
+public TextMeshProUGUI checkText;
     // Start is called before the first frame update
     void Start()
     {
+        
+
+        if (GameManager.Instance.pictureprefab!= null)
+        {
+            prefab = GameManager.Instance.pictureprefab;
+            checkText.text="recevied";
+        }
+        else
+        {
+            checkText.text=""+GameManager.Instance.pictureprefab;
+        }
+
+        
        currentPreview = Instantiate(previewPrefab);
         currentPreview.SetActive(false);
     }
@@ -85,6 +100,7 @@ private bool hasSpawned=false;
     public void Spawn(){
            
             Instantiate(prefab, finalPosition,finalRotation);
+            currentPreview.SetActive(false);
                 
               
     }
@@ -92,4 +108,10 @@ private bool hasSpawned=false;
     public void checkCount(){
         currentCount+=1;
     }
+
+    // public void ReceiveGameObject(GameObject obj)
+    // {
+    //     prefab = obj;  // 将接收到的 GameObject 赋值给公共变量
+    //     Debug.Log("Received object: " + obj.name);
+    // }
 }
