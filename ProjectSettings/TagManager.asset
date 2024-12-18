@@ -3,12 +3,14 @@
 --- !u!78 &1
 TagManager:
   serializedVersion: 2
-  tags: []
+  tags:
+  - WhiteBoard
+  - path
   layers:
   - Default
   - TransparentFX
   - Ignore Raycast
-  - 
+  - DrawPathTrigger
   - Water
   - UI
   - 

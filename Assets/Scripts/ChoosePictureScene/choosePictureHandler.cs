@@ -39,6 +39,7 @@ public class choosePictureHandler : MonoBehaviour
     // public GameObject spawnPrefab;
     // public SceneAsset nextScene;
     public String sceneName;
+    public String contentClass;
     // Start is called before the first frame update
     void Awake(){
         DontDestroyOnLoad(choosedPicture); 
@@ -77,11 +78,12 @@ public class choosePictureHandler : MonoBehaviour
                         
                          CreateMaterialFromImage(image);
                          GameManager.Instance.pictureprefab = choosedPicture;
+                         GameManager.Instance.contentClass=contentClass;
                         //  GameManager.Instance.data=1;
                         //  spawnGameObj.SetActive(true);
                         //  startSpawn();
-                        checkText.text=""+GameManager.Instance.pictureprefab;
-                         SceneManager.LoadScene(sceneName);
+                        checkText.text=""+GameManager.Instance.contentClass;
+                        //  SceneManager.LoadScene(sceneName);
                     }
                     else
                     {

@@ -15,6 +15,12 @@ public class directlySpawn : MonoBehaviour
     // Start is called before the first frame update
     void Start()
     {
+         if (GameManager.Instance.pictureprefab!= null)
+        {
+            prefab = GameManager.Instance.pictureprefab;
+            // checkText.text="recevied";
+        }
+       
         currentPreview = Instantiate(previewPrefab);
         currentPreview.SetActive(false);
     }

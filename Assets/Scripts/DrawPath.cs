@@ -100,7 +100,9 @@ private Vector2 lastTouchPos;
         if (OVRInput.Get(OVRInput.RawButton.RIndexTrigger))
         {
             Ray ray = new Ray(RayStartPoint.position, RayStartPoint.forward);
-            if (Physics.Raycast(ray, out RaycastHit hit))
+            int layerMask = ~LayerMask.GetMask("DrawPathTrigger"); // 替换为你要排除的 Layer 名称
+            // if (Physics.Raycast(ray, out RaycastHit hit))
+            if (Physics.Raycast(ray, out RaycastHit hit, Mathf.Infinity, layerMask))
             {
                 
                 DrawOnTexture(ray, hit);
@@ -109,6 +111,9 @@ private Vector2 lastTouchPos;
                     checkText.text =hit.collider.gameObject+":"+paths[currentPathIndex];
                     Renderer r=paths[currentPathIndex].GetComponent<Renderer>();
                     r.material.color=Color.blue;
+                    // Color color = r.material.color; // 获取当前颜色
+                    // color.a = 0.0f; // 设置透明度（0 表示完全透明，1 表示不透明）
+                    // r.material.color = color; //
 
                     currentPathIndex++;
                     
@@ -127,6 +132,7 @@ private Vector2 lastTouchPos;
             if (whiteBoardTexture != null && originalPixels != null)
         {
             whiteBoardTexture.SetPixels(originalPixels);
+            
             whiteBoardTexture.Apply();
         }
         }
@@ -140,8 +146,8 @@ private Vector2 lastTouchPos;
     Vector2 touchPos = new Vector2(hit.textureCoord.x, hit.textureCoord.y);
 
    
-    int x = (int)(touchPos.x * whiteBoardTexture.width - (penSize / 2));
-    int y = (int)(touchPos.y * whiteBoardTexture.height - (penSize / 2));
+    int x = (int)(touchPos.x * whiteBoardTexture.width- (penSize / 2) );
+    int y = (int)(touchPos.y * whiteBoardTexture.height- (penSize / 2));
 
     
     x = Mathf.Clamp(x, 0, whiteBoardTexture.width - penSize);
@@ -151,12 +157,31 @@ private Vector2 lastTouchPos;
     if (lastTouchPos != touchPos)
     {
         whiteBoardTexture.SetPixels(x, y, penSize, penSize, penColorArray);
+        //  DrawLine(lastTouchPos, touchPos);
         whiteBoardTexture.Apply();  // Apply the changes
     }
 
     // Update the last touch position
     lastTouchPos = touchPos;
 }
+
+ private void DrawLine(Vector2 start, Vector2 end)
+    {
+        
+        int steps = 10; // 可以调整步长来控制线条的平滑度
+        for (int i = 1; i <= steps; i++)
+        {
+            float t = i / (float)steps;
+            Vector2 lerpedPos = Vector2.Lerp(start, end, t);
+            int lerpedX = (int)(lerpedPos.x * whiteBoardTexture.width);
+            int lerpedY = (int)(lerpedPos.y * whiteBoardTexture.height);
+             lerpedX = Mathf.Clamp(lerpedX, 0, whiteBoardTexture.width - penSize);
+        lerpedY = Mathf.Clamp(lerpedY, 0, whiteBoardTexture.height - penSize);
+
+            // 绘制线条
+            whiteBoardTexture.SetPixels(lerpedX, lerpedY, penSize, penSize, penColorArray);
+        }
+    }
 
     
 

@@ -5,6 +5,7 @@ using UnityEngine.SceneManagement;
 
 public class ChangeScene : MonoBehaviour
 {
+    public GameObject  checkCube;
     // Start is called before the first frame update
     void Start()
     {
@@ -36,7 +37,25 @@ public class ChangeScene : MonoBehaviour
         // GameManager.Instance.pictureprefab.SetActive(false);
     }
     public void ChangeScene5(){
-        SceneManager.LoadScene("DragFillColor");
+        
+        if(GameManager.Instance.contentClass=="Cat"){
+                SceneManager.LoadScene("DragFillColor_cat");
+        }
+        else if(GameManager.Instance.contentClass=="Flower"){
+                SceneManager.LoadScene("DragFillColor");
+        }
+        else{
+                SceneManager.LoadScene("DragFillColor_tree");
+        }
         // GameManager.Instance.pictureprefab.SetActive(false);
+    }
+
+    public void ChangeChoosePicture(){
+        SceneManager.LoadScene("ChoosePicture");
+    }
+
+    public void check(){
+        Renderer r=checkCube.GetComponent<Renderer>();
+        r.material.color=Color.red;
     }
 }

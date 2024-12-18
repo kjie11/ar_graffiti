@@ -1,9 +1,11 @@
+using System;
 using UnityEngine;
 
 public class GameManager : MonoBehaviour
 {
     
     public  GameObject pictureprefab;  
+    public String contentClass;
     public static Material savedMaterial;  
     // public int data=0;
     
@@ -13,6 +15,11 @@ public class GameManager : MonoBehaviour
     public GameObject Pictureprefab{
         get{return pictureprefab;}
     }
+
+    public String ContentClass{
+        get{return contentClass;}
+    }
+
 
     // 通过 GameManager.Instance 访问单例实例
     public static GameManager Instance
