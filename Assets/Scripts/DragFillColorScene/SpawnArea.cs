@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using Meta.XR.MRUtilityKit;
 using TMPro;
 using UnityEngine;
+using UnityEngine.SceneManagement;
 
 public class SpawnArea : MonoBehaviour
 {
@@ -44,7 +45,7 @@ public TextMeshProUGUI checkText;
     {
        
         Area();
-        if(currentCount==totalCount){
+        if(currentCount==totalCount){      
                Spawn();
         }
     }

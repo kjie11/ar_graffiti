@@ -40,7 +40,7 @@ private Vector2 lastTouchPos;
      private Color[] originalPixels;
       private Color[] penColorArray;
     public TextMeshProUGUI checkText;
-    public GameObject targetObject;
+    // public GameObject targetObject;
     
     // Start is called before the first frame update
     void Start()
@@ -49,12 +49,12 @@ private Vector2 lastTouchPos;
         if (GameManager.Instance.pictureprefab!= null)
         {
             NewPrefab = GameManager.Instance.pictureprefab;
-            checkText.text="recevied";
+            // checkText.text="recevied";
         }
-        else
-        {
-            checkText.text=""+GameManager.Instance.pictureprefab;
-        }
+        // else
+        // {
+        //     checkText.text=""+GameManager.Instance.pictureprefab;
+        // }
         
          WhiteBoardRenderer = whiteBoard.GetComponent<Renderer>();
         whiteBoardTexture = (Texture2D)WhiteBoardRenderer.material.mainTexture;
@@ -84,12 +84,19 @@ private Vector2 lastTouchPos;
     
     void Update()
     {
-        
+        // if(GameManager.Instance.isCombination&&!GameManager.Instance.drawPathCheck){
+        //     CheckPathWithRaycast();
+        //     if(GameManager.Instance.drawPathCheck==true){
+        //         SceneManager.LoadScene("Combination");
+        //     }
+        // }
         CheckPathWithRaycast();
        
         SpawnArea();
         
-        
+        if(GameManager.Instance.isCombination==true&&GameManager.Instance.drawPathCheck==true){
+            SceneManager.LoadScene("DragFillColor");
+        }
 
     }
 
@@ -108,7 +115,7 @@ private Vector2 lastTouchPos;
                 DrawOnTexture(ray, hit);
                 if (currentPathIndex < paths.Count && hit.collider.gameObject == paths[currentPathIndex])
                 {   
-                    checkText.text =hit.collider.gameObject+":"+paths[currentPathIndex];
+                    // checkText.text =hit.collider.gameObject+":"+paths[currentPathIndex];
                     Renderer r=paths[currentPathIndex].GetComponent<Renderer>();
                     r.material.color=Color.blue;
                     // Color color = r.material.color; // 获取当前颜色
@@ -119,9 +126,19 @@ private Vector2 lastTouchPos;
                     
                     if (currentPathIndex >= paths.Count)
                     {
-                       
-                        Instantiate(NewPrefab, finalPosition, finalRotation);
+                        checkText.text="drawPathCheck:"+GameManager.Instance.drawPathCheck+"combination:"+GameManager.Instance.isCombination;
+                       if(GameManager.Instance.isCombination){
+                            GameManager.Instance.drawPathCheck=true;
+                            GameManager.Instance.complete=true; //临时
+                            
+                        }
+                    //     else{
+                            Instantiate(NewPrefab, finalPosition, finalRotation);
                         currentPreview.SetActive(false);
+                        // }
+                       
+                        
+                        
                     }
                 }
             }

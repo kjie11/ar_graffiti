@@ -34,6 +34,14 @@ private bool hasSpawned=false;
     // Start is called before the first frame update
     void Start()
     {
+         if (GameManager.Instance.pictureprefab!= null)
+        {
+            prefab = GameManager.Instance.pictureprefab;
+          
+        }
+       
+       
+    
         currentPreview = Instantiate(previewPrefab);
         currentPreview.SetActive(false);
         penRender=pen.GetComponent<Renderer>();
@@ -183,6 +191,7 @@ private bool hasSpawned=false;
             prefab.SetActive(true);
             Instantiate(prefab, finalPosition,finalRotation);
             prefab.SetActive(false);
+            currentPreview.SetActive(false);
                 // ren=prefab.GetComponent<Renderer>();
                 // prefab.transform.position=bestPose.Value.position;
                 // prefab.transform.rotation=bestPose.Value.rotation;

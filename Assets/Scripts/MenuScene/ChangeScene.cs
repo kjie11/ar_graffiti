@@ -1,3 +1,4 @@
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
@@ -24,17 +25,43 @@ public class ChangeScene : MonoBehaviour
     }
 
     public void ChangeScene2(){
-        SceneManager.LoadScene("PathSpawn");
+        
         // GameManager.Instance.pictureprefab.SetActive(false);
+
+         if(GameManager.Instance.contentClass=="Cat"){
+                SceneManager.LoadScene("PathSpawn");
+        }
+        else if(GameManager.Instance.contentClass=="Flower"){
+                SceneManager.LoadScene("PathSpawn_square");
+        }
+        else{
+                SceneManager.LoadScene("PathSpawn_triangle");
+        }
     }
 
     public void ChangeScene3(){
-        SceneManager.LoadScene("SpraySpawn");
-        // GameManager.Instance.pictureprefab.SetActive(false);
+        
+        if(GameManager.Instance.contentClass=="Cat"){
+                SceneManager.LoadScene("SpraySpawn");
+        }
+        else if(GameManager.Instance.contentClass=="Flower"){
+                SceneManager.LoadScene("SpraySpawn_flower");
+        }
+        else{
+                SceneManager.LoadScene("SpraySpawn_tree");
+        }
     }
     public void ChangeScene4(){
-        SceneManager.LoadScene("fillColor");
-        // GameManager.Instance.pictureprefab.SetActive(false);
+        
+         if(GameManager.Instance.contentClass=="Cat"){
+                SceneManager.LoadScene("fillColor");
+        }
+        else if(GameManager.Instance.contentClass=="Flower"){
+                SceneManager.LoadScene("fillColor");
+        }
+        else{
+                SceneManager.LoadScene("fillColor");
+        }
     }
     public void ChangeScene5(){
         
@@ -52,6 +79,12 @@ public class ChangeScene : MonoBehaviour
 
     public void ChangeChoosePicture(){
         SceneManager.LoadScene("ChoosePicture");
+    }
+
+    public void changeCombination(String contentClass){
+        GameManager.Instance.contentClass=contentClass;
+        GameManager.Instance.isCombination=true;
+        SceneManager.LoadScene("Combination");
     }
 
     public void check(){

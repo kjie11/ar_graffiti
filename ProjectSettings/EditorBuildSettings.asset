@@ -35,6 +35,21 @@ EditorBuildSettings:
   - enabled: 1
     path: Assets/Scenes/DragFillColor_tree.unity
     guid: 5b102b948db29f542bea456bcb9e44f8
+  - enabled: 1
+    path: Assets/Scenes/Combination.unity
+    guid: acb5d6b99c5af8e43aa7eebf2ebb748b
+  - enabled: 1
+    path: Assets/Scenes/SpraySpawn_flower.unity
+    guid: 56a5f2664ac54e54297df383b1cb65ce
+  - enabled: 1
+    path: Assets/Scenes/SpraySpawn_tree.unity
+    guid: b2b0a7ddff845f54b9eb3cb93d3a5df3
+  - enabled: 1
+    path: Assets/Scenes/PathSpawn_square.unity
+    guid: eea2b5fa707fb5a4998e807b60fea79b
+  - enabled: 1
+    path: Assets/Scenes/PathSpawn_triangle.unity
+    guid: e86c9891da6de3e45b932055291c273e
   m_configObjects:
     Unity.XR.Oculus.Settings: {fileID: 11400000, guid: 3c3f96900bb7954418626e25c65be308, type: 2}
     com.unity.xr.management.loader_settings: {fileID: 11400000, guid: 0d1bdcb052c661c44a6db0eb384f3474, type: 2}
