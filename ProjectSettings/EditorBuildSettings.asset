@@ -50,6 +50,15 @@ EditorBuildSettings:
   - enabled: 1
     path: Assets/Scenes/PathSpawn_triangle.unity
     guid: e86c9891da6de3e45b932055291c273e
+  - enabled: 1
+    path: Assets/Scenes/CombinationOne.unity
+    guid: b8b369e34efd5b84bb24a24e78df04bf
+  - enabled: 1
+    path: Assets/Scenes/CombinationTwo.unity
+    guid: 654a7587f764184458f05c6716f81a02
+  - enabled: 1
+    path: Assets/Scenes/CombinationThree.unity
+    guid: b77623f19de787e4aa9a2efda529fa56
   m_configObjects:
     Unity.XR.Oculus.Settings: {fileID: 11400000, guid: 3c3f96900bb7954418626e25c65be308, type: 2}
     com.unity.xr.management.loader_settings: {fileID: 11400000, guid: 0d1bdcb052c661c44a6db0eb384f3474, type: 2}

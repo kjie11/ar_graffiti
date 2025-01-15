@@ -84,7 +84,20 @@ public class ChangeScene : MonoBehaviour
     public void changeCombination(String contentClass){
         GameManager.Instance.contentClass=contentClass;
         GameManager.Instance.isCombination=true;
-        SceneManager.LoadScene("Combination");
+        SceneManager.LoadScene("CombinationOne");
+    }
+
+    public void changeCombinationTwo(String contentClass){
+        GameManager.Instance.contentClass=contentClass;
+        GameManager.Instance.isCombination=true;
+        SceneManager.LoadScene("CombinationTwo");
+    }
+
+    
+    public void changeCombinationThree(String contentClass){
+        GameManager.Instance.contentClass=contentClass;
+        GameManager.Instance.isCombination=true;
+        SceneManager.LoadScene("CombinationThree");
     }
 
     public void check(){
