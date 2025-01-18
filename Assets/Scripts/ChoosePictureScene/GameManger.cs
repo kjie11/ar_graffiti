@@ -15,7 +15,7 @@ public class GameManager : MonoBehaviour
     public bool dragFillColorCheck=false;
     public bool complete=false;//两个任务都做完
     // public int data=0;
-    
+    public GameObject selectedPicture; //之前的choosedPicture
     private static GameManager instance;  
     
 

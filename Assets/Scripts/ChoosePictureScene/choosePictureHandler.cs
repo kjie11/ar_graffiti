@@ -40,6 +40,7 @@ public class choosePictureHandler : MonoBehaviour
     // public SceneAsset nextScene;
     public String sceneName;
     public String contentClass;
+     public TextMeshProUGUI graffitiTitle;
     // Start is called before the first frame update
     void Awake(){
         DontDestroyOnLoad(choosedPicture); 
@@ -49,6 +50,7 @@ public class choosePictureHandler : MonoBehaviour
         
          r=choosedPicture.GetComponent<Renderer>();
         // string sceneName = nextScene.name;
+        GameManager.Instance.selectedPicture=choosedPicture;
     }
 
     // Update is called once per frame
@@ -77,8 +79,19 @@ public class choosePictureHandler : MonoBehaviour
                     {
                         
                          CreateMaterialFromImage(image);
-                         GameManager.Instance.pictureprefab = choosedPicture;
+                        //  GameManager.Instance.pictureprefab = choosedPicture;
                          GameManager.Instance.contentClass=contentClass;
+                         GameManager.Instance.selectedPicture=choosedPicture;
+                         GameManager.Instance.pictureprefab = GameManager.Instance.selectedPicture;
+                         if(contentClass=="Cat"){
+                            graffitiTitle.text="Cat";
+                         }
+                         else if(contentClass=="Flower"){
+                            graffitiTitle.text="Flower";
+                         }
+                         else{
+                            graffitiTitle.text="Tree";
+                         }
                         //  GameManager.Instance.data=1;
                         //  spawnGameObj.SetActive(true);
                         //  startSpawn();
@@ -120,6 +133,7 @@ public class choosePictureHandler : MonoBehaviour
         if (choosedPicture != null)
         {
             choosedPicture.GetComponent<Renderer>().material = newMaterial;
+            GameManager.Instance.selectedPicture.GetComponent<Renderer>().material=newMaterial;
         }
         else
         {

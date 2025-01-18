@@ -1829,7 +1829,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   targetCollider: {fileID: 153694267}
-  savedTransform: {fileID: 153694260}
+  savedTransform: {fileID: 1626504867}
   grab: {fileID: 1016391321}
   rayGrab: {fileID: 1178821364}
   combination1: {fileID: 1820543302}
@@ -3159,7 +3159,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 0
+  m_IsActive: 1
 --- !u!4 &1111621573
 Transform:
   m_ObjectHideFlags: 0
@@ -4902,6 +4902,11 @@ MeshFilter:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1554158506}
   m_Mesh: {fileID: 10202, guid: 0000000000000000e000000000000000, type: 0}
+--- !u!4 &1626504867 stripped
+Transform:
+  m_CorrespondingSourceObject: {fileID: 3746897896377368240, guid: ef98b63434e841640b553297c8923a4e, type: 3}
+  m_PrefabInstance: {fileID: 153694259}
+  m_PrefabAsset: {fileID: 0}
 --- !u!210 &1813985476
 SortingGroup:
   m_ObjectHideFlags: 0

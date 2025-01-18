@@ -94,9 +94,9 @@ private Vector2 lastTouchPos;
        
         SpawnArea();
         
-        if(GameManager.Instance.isCombination==true&&GameManager.Instance.drawPathCheck==true){
-            SceneManager.LoadScene("DragFillColor");
-        }
+        // if(GameManager.Instance.isCombination==true&&GameManager.Instance.drawPathCheck==true){
+        //     SceneManager.LoadScene("DragFillColor");
+        // }
 
     }
 
