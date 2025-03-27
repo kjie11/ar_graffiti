@@ -20,9 +20,6 @@ This is an AR graffiti system prototype built for research purposes. It allows u
   -PathDetection + DragFillColor
   -DragFillColor + Spray
 
-## 🧱 System Architecture
-
-![System Architecture](./images/architecture.png)
 
 ## 🚀 Getting Started
 
@@ -35,7 +32,7 @@ This is an AR graffiti system prototype built for research purposes. It allows u
 
 1. Clone this repo:
    ```bash
-   git clone https://github.com/your-username/ar-graffiti.git
+   git clone https://github.com/kjie11/ar_graffiti
    
 ## 🛠️ Getting Started
 
