@@ -16,9 +16,10 @@ This is an AR graffiti system prototype built for research purposes. It allows u
   - Fill Color
   - Drag Fill Color
 - 3 combination methods
-  -PathDetection + FillColor
-  -PathDetection + DragFillColor
-  -DragFillColor + Spray
+
+    - PathDetection + FillColor  
+    - PathDetection + DragFillColor  
+    - DragFillColor + Spray
 
 
 ## 🚀 Getting Started
